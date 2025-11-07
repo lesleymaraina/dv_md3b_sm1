@@ -1,0 +1,631 @@
+---
+title: "Communicating Quantitative Insight: Context and Annotation"
+author: "<br><br><span style='font-size:25px;'><strong>Lesley Chapman Hannah, Ph.D., M.S.</strong></span><br>College of Graduate Studies<br>Northeast Ohio Medical University"
+
+format: 
+  revealjs:
+    #theme: solarized
+    css: style.css
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    logo: images/Flame.jpg
+    #css: styles.css
+    
+---
+
+## Lecture Outline
+
+
+- Turning numbers into biological interpretation
+
+  - Discuss how data visualization can change within context—baseline, exposure, and comparator
+
+- Context as the Analytical Frame
+
+  - Every plot requires reference points: what changed, relative to what, and over what domain (time, dose, or event)
+
+- Clarity Through Structure
+
+  - Grouping and organizing longitudinal numerical data $\rightarrow$ visual complexity becomes readable
+
+
+
+::: footer
+
+:::
+
+## <span style="font-size:80%">Recap: Visualizing Change in Data</span> {.smaller}
+
+**Key Concepts**
+
+- **Biomedical data are dynamic**: recovery, relapse, enzyme induction, and patient flow all unfold over time — reflective of processes not points
+
+- **Temporal visualization reveals mechanism**: by showing rate, direction, and timing, we see how biology responds, adapts, or deteriorates
+
+- **Quantifying change links data to biology**: slopes and trajectories translate raw measurements into physiological meaning — improvement, failure, or compensation
+
+- Visualizing change builds intuition about how systems behave, not just averages 
+
+**Example**
+
+- **Longitudinal eGFR visualization** exposes gradual kidney decline months before thresholds in a static table would flag it — allowing earlier intervention
+
+::: footer
+:::
+
+
+
+## <span style="font-size:80%">Context as Foundation</span> {.smaller}
+
+Change is interpretable only within context: baseline, exposure, comparator
+
+Before plotting define:
+
+- What changed? (variable)
+
+- Relative to what? (baseline or reference)
+
+- Over what domain? (time, dose, event count)
+
+Context transforms a plot from motion to meaning
+
+::: footer
+:::
+
+
+## <span style="font-size:80%">Context as Foundation</span> {.smaller}
+
+**Research question(s): **
+
+Understand impact on hypertension: Does systolic blood pressure (SBP) improve from baseline over 12 weeks after therapy initiation?
+
+Does the change differ between treatment groups (ACEi vs ARB)?
+	
+- ACEi – Angiotensin-Converting Enzyme Inhibitor
+- ARB – Angiotensin II Receptor Blocker
+
+
+::: footer
+:::
+
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+## <span style="font-size:60%">Context as Foundation</span> {.smaller}
+
+
+::: columns
+::: {.column .small}
+
+**Plot type**
+
+Change-from-baseline line plot over time, with group means by treatment
+
+**Rationale:**
+
+**What changed?** Blood pressure change from baseline (negative = improvement)
+
+**Relative to what?** Week-0 baseline per patient (context)
+
+**Over what domain?** Time (weeks) since start 
+
+**Comparator?** Treatment arms (ACEi vs ARB) shown simultaneously
+
+:::
+::: column
+
+```{r}
+#| fig-width: 8
+#| fig-height: 9
+
+# =========================================
+# Systolic Blood Pressure Change from Baseline
+# =========================================
+
+#load libraries and simulate data
+library(tidyverse)
+
+set.seed(42)
+
+n <- 120
+patients <- tibble(
+  patient_id = paste0("P", seq_len(n)),
+  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
+  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
+) %>%
+  mutate(
+    baseline_stratum = cut(
+      baseline_sbp,
+      breaks = c(-Inf, 159, Inf),
+      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
+    ),
+    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
+                if_else(baseline_sbp >= 160, 0.10, 0.00) +
+                rnorm(n(), 0, 0.05),
+    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
+                if_else(treatment == "ACEi", 4, 0) +
+                rnorm(n(), 0, 2)
+  )
+
+weeks <- 0:12
+
+dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+  left_join(patients, by = "patient_id") %>%
+  mutate(
+    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
+    delta_sbp = sbp - baseline_sbp
+  ) %>%
+  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+
+# Generate Plot
+ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
+  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
+  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(
+    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
+    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
+    x = "Weeks Since Start",
+    y = "Δ SBP from Baseline (mmHg)",
+    color = "Treatment"
+  ) +
+  theme_minimal(base_size = 13)
+
+
+
+```
+:::
+:::
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+## <span style="font-size:60%">Context as Foundation</span> {.smaller}
+
+
+::: columns
+::: {.column .small}
+
+**Plot Interpretation**
+
+Both therapies lower blood pressure over time
+
+- both ACEi and ARB reduce SBP in Stage 3 hypertension 
+
+ACE inhibitors produce a faster and slightly greater response
+
+- ACEi mean line declines more steeply and reaches a lower plateau, indicating more rapid early improvement and a larger overall reduction in SBP compared with ARBs
+
+:::
+::: column
+
+```{r}
+#| fig-width: 8
+#| fig-height: 9
+
+# =========================================
+# Systolic Blood Pressure Change from Baseline
+# =========================================
+
+#load libraries and simulate data
+library(tidyverse)
+
+set.seed(42)
+
+n <- 120
+patients <- tibble(
+  patient_id = paste0("P", seq_len(n)),
+  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
+  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
+) %>%
+  mutate(
+    baseline_stratum = cut(
+      baseline_sbp,
+      breaks = c(-Inf, 159, Inf),
+      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
+    ),
+    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
+                if_else(baseline_sbp >= 160, 0.10, 0.00) +
+                rnorm(n(), 0, 0.05),
+    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
+                if_else(treatment == "ACEi", 4, 0) +
+                rnorm(n(), 0, 2)
+  )
+
+weeks <- 0:12
+
+dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+  left_join(patients, by = "patient_id") %>%
+  mutate(
+    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
+    delta_sbp = sbp - baseline_sbp
+  ) %>%
+  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+
+# Generate Plot
+ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
+  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
+  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(
+    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
+    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
+    x = "Weeks Since Start",
+    y = "Δ SBP from Baseline (mmHg)",
+    color = "Treatment"
+  ) +
+  theme_minimal(base_size = 13)
+
+
+
+```
+:::
+:::
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+
+
+
+## <span style="font-size:80%">Seeing structure in many trajectories</span> {.smaller}
+
+- Visualizing many longitudinal lines $\rightarrow$ plot can quickly become unreadable 
+
+  - lines overlap, and individual trends disappear
+
+- Color selection and/or transparency help recover structure: you can see patterns within each group while still appreciating overall behavior
+
+- Grouping trajectories by treatment arm, genotype, or study site clarifies whether responses are consistent within groups and distinct between groups
+
+- Clarity and structure emerge when complex temporal data are organized visually
+
+::: footer
+:::
+
+
+
+
+
+## <span style="font-size:80%">Seeing structure in many trajectories</span> {.smaller}
+
+**Research Question**
+
+How do postoperative heart rate recovery patterns differ between patients who received beta-blockers vs. those who didn’t during cardiac surgery recovery?
+
+**Plot type**
+
+Longitudinal line plot showing heart rate (bpm) over time since surgery (hours)
+
+**Rationale**
+
+- Postoperative recovery datasets contain many overlapping time-series per patient
+
+::: footer
+:::
+
+
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+## <span style="font-size:80%">Seeing structure in many trajectories</span> {.smaller}
+
+
+::: columns
+::: {.column .small}
+
+** Overplotting hides the signal **
+
+- Each black/grey line represents one patient’s heart rate recovery over time
+
+- Lines are ungrouped $\rightarrow$ overlap and obscure individual patterns
+
+- Downward trend can be viewed $\rightarrow$ difficult to interpret consistency or group differences
+
+- Example of raw longitudinal data 
+
+  - dense and cognitively heavy
+
+
+:::
+::: column
+
+```{r}
+#| fig-width: 8
+#| fig-height: 9
+
+# =========================================
+# Systolic Blood Pressure Change from Baseline
+# =========================================
+
+#load libraries and simulate data
+library(tidyverse)
+
+set.seed(42)
+
+n <- 120
+patients <- tibble(
+  patient_id = paste0("P", seq_len(n)),
+  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
+  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
+) %>%
+  mutate(
+    baseline_stratum = cut(
+      baseline_sbp,
+      breaks = c(-Inf, 159, Inf),
+      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
+    ),
+    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
+                if_else(baseline_sbp >= 160, 0.10, 0.00) +
+                rnorm(n(), 0, 0.05),
+    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
+                if_else(treatment == "ACEi", 4, 0) +
+                rnorm(n(), 0, 2)
+  )
+
+weeks <- 0:12
+
+dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+  left_join(patients, by = "patient_id") %>%
+  mutate(
+    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
+    delta_sbp = sbp - baseline_sbp
+  ) %>%
+  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+
+# Generate Plot
+ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
+  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
+  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(
+    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
+    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
+    x = "Weeks Since Start",
+    y = "Δ SBP from Baseline (mmHg)",
+    color = "Treatment"
+  ) +
+  theme_minimal(base_size = 13)
+
+
+
+```
+:::
+:::
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+## <span style="font-size:80%">Seeing structure in many trajectories</span> {.smaller}
+
+
+::: columns
+::: {.column .small}
+
+**Structure emerges when data are organized **
+
+- By adding grouping (e.g., by treatment or condition) and using transparency, individual variability remains visible while the overall structure becomes clear
+
+- The plot now shows both:
+
+  - Within-group consistency (patients under the same condition show similar patterns)
+
+  - Between-group differences (different treatments recover at different rates)
+
+
+
+:::
+::: column
+
+```{r}
+#| fig-width: 8
+#| fig-height: 9
+
+# =========================================
+# Systolic Blood Pressure Change from Baseline
+# =========================================
+
+#load libraries and simulate data
+library(tidyverse)
+
+set.seed(42)
+
+n <- 120
+patients <- tibble(
+  patient_id = paste0("P", seq_len(n)),
+  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
+  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
+) %>%
+  mutate(
+    baseline_stratum = cut(
+      baseline_sbp,
+      breaks = c(-Inf, 159, Inf),
+      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
+    ),
+    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
+                if_else(baseline_sbp >= 160, 0.10, 0.00) +
+                rnorm(n(), 0, 0.05),
+    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
+                if_else(treatment == "ACEi", 4, 0) +
+                rnorm(n(), 0, 2)
+  )
+
+weeks <- 0:12
+
+dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+  left_join(patients, by = "patient_id") %>%
+  mutate(
+    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
+    delta_sbp = sbp - baseline_sbp
+  ) %>%
+  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+
+# Generate Plot
+ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
+  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
+  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(
+    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
+    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
+    x = "Weeks Since Start",
+    y = "Δ SBP from Baseline (mmHg)",
+    color = "Treatment"
+  ) +
+  theme_minimal(base_size = 13)
+
+
+
+```
+:::
+:::
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+## <span style="font-size:80%">Seeing structure in many trajectories</span> {.smaller}
+
+
+::: columns
+::: {.column .small}
+
+**Clarity through contrast**
+
+- Plot displays same complexity, better structure
+
+- Patients receiving beta-blockers (dark turquoise) stabilize slightly faster and reach lower heart rates
+
+- Non-beta blocker recipients (faint coral) recover more slowly
+
+- Transparency and color distinction allow structure to emerge without clutter — a visual argument for organized longitudinal plotting
+
+
+
+:::
+::: column
+
+```{r}
+#| fig-width: 8
+#| fig-height: 9
+
+# =========================================
+# Systolic Blood Pressure Change from Baseline
+# =========================================
+
+#load libraries and simulate data
+library(tidyverse)
+
+set.seed(42)
+
+n <- 120
+patients <- tibble(
+  patient_id = paste0("P", seq_len(n)),
+  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
+  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
+) %>%
+  mutate(
+    baseline_stratum = cut(
+      baseline_sbp,
+      breaks = c(-Inf, 159, Inf),
+      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
+    ),
+    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
+                if_else(baseline_sbp >= 160, 0.10, 0.00) +
+                rnorm(n(), 0, 0.05),
+    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
+                if_else(treatment == "ACEi", 4, 0) +
+                rnorm(n(), 0, 2)
+  )
+
+weeks <- 0:12
+
+dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+  left_join(patients, by = "patient_id") %>%
+  mutate(
+    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
+    delta_sbp = sbp - baseline_sbp
+  ) %>%
+  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+
+# Generate Plot
+ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
+  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
+  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(
+    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
+    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
+    x = "Weeks Since Start",
+    y = "Δ SBP from Baseline (mmHg)",
+    color = "Treatment"
+  ) +
+  theme_minimal(base_size = 13)
+
+
+
+```
+:::
+:::
+
+
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+
+
+## <span style="font-size:80%">Summary</span> {.smaller}
+
+- Context defines interpretation : quantitative change has meaning only when tied to a baseline or comparator (ACEi vs ARB, pre- vs post-therapy)
+
+- Organization creates insight : opacity and color grouping reveal structure hidden in overlapping lines
+
+- Visual design is analytical : choices of encoding, grouping, and contrast directly influence the ability to detect biological patterns
+
+- Effective visualization connects raw numbers to physiological response, making temporal data clinically interpretable
+
+
+::: footer
+:::
+
