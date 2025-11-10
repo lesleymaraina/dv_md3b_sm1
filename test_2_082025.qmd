@@ -337,7 +337,7 @@ Longitudinal line plot showing heart rate (bpm) over time since surgery (hours)
 ::: columns
 ::: {.column .small}
 
-** Overplotting hides the signal **
+**Overplotting hides the signal**
 
 - Each black/grey line represents one patient’s heart rate recovery over time
 
@@ -358,55 +358,39 @@ Longitudinal line plot showing heart rate (bpm) over time since surgery (hours)
 #| fig-height: 9
 
 # =========================================
-# Systolic Blood Pressure Change from Baseline
+# Heart Rate Recovery — All Grey Lines
 # =========================================
 
-#load libraries and simulate data
+#Load libraries and simulate data
 library(tidyverse)
+set.seed(123)
 
-set.seed(42)
+n_patients <- 10
+hours <- seq(0, 48, by = 2)
 
-n <- 120
 patients <- tibble(
-  patient_id = paste0("P", seq_len(n)),
-  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
-  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
-) %>%
-  mutate(
-    baseline_stratum = cut(
-      baseline_sbp,
-      breaks = c(-Inf, 159, Inf),
-      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
-    ),
-    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
-                if_else(baseline_sbp >= 160, 0.10, 0.00) +
-                rnorm(n(), 0, 0.05),
-    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
-                if_else(treatment == "ACEi", 4, 0) +
-                rnorm(n(), 0, 2)
-  )
+  patient_id   = paste0("P", seq_len(n_patients)),
+  beta_blocker = sample(c("Yes", "No"), n_patients, replace = TRUE),
+  baseline_hr  = rnorm(n_patients, 95, 8),
+  recovery_rate = if_else(beta_blocker == "Yes",
+                          rnorm(n_patients, 0.10, 0.03),
+                          rnorm(n_patients, 0.06, 0.02))
+)
 
-weeks <- 0:12
-
-dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+dat <- expand_grid(patient_id = patients$patient_id, hour = hours) %>%
   left_join(patients, by = "patient_id") %>%
   mutate(
-    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
-    delta_sbp = sbp - baseline_sbp
-  ) %>%
-  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+    heart_rate = baseline_hr - 25 * (1 - exp(-recovery_rate * hour)) + rnorm(n(), 0, 2)
+  )
 
-# Generate Plot
-ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
-  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
-  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
-  geom_hline(yintercept = 0, linetype = "dotted") +
+# Generate Plots
+ggplot(dat, aes(x = hour, y = heart_rate, group = patient_id)) +
+  geom_line(color = "grey40", alpha = 0.7, linewidth = 1.0) +
   labs(
-    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
-    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
-    x = "Weeks Since Start",
-    y = "Δ SBP from Baseline (mmHg)",
-    color = "Treatment"
+    title = "Heart Rate Recovery — Unorganized View",
+    subtitle = "All trajectories shown in grey; structure and grouping not yet applied",
+    x = "Hours Since Surgery",
+    y = "Heart Rate (bpm)"
   ) +
   theme_minimal(base_size = 13)
 
@@ -454,57 +438,49 @@ ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
 #| fig-height: 9
 
 # =========================================
-# Systolic Blood Pressure Change from Baseline
+# Heart Rate Recovery: Clarity Through Transparency
 # =========================================
 
-#load libraries and simulate data
+#Load libraries and simulate data
 library(tidyverse)
+set.seed(123)
 
-set.seed(42)
 
-n <- 120
+n_patients <- 10
+hours <- seq(0, 48, by = 2)
+
 patients <- tibble(
-  patient_id = paste0("P", seq_len(n)),
-  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
-  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
-) %>%
-  mutate(
-    baseline_stratum = cut(
-      baseline_sbp,
-      breaks = c(-Inf, 159, Inf),
-      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
-    ),
-    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
-                if_else(baseline_sbp >= 160, 0.10, 0.00) +
-                rnorm(n(), 0, 0.05),
-    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
-                if_else(treatment == "ACEi", 4, 0) +
-                rnorm(n(), 0, 2)
-  )
+  patient_id   = paste0("P", seq_len(n_patients)),
+  beta_blocker = sample(c("Yes", "No"), n_patients, replace = TRUE),
+  baseline_hr  = rnorm(n_patients, 95, 8),
+  recovery_rate = if_else(beta_blocker == "Yes",
+                          rnorm(n_patients, 0.10, 0.03),
+                          rnorm(n_patients, 0.06, 0.02))
+)
 
-weeks <- 0:12
-
-dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+dat <- expand_grid(patient_id = patients$patient_id, hour = hours) %>%
   left_join(patients, by = "patient_id") %>%
   mutate(
-    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
-    delta_sbp = sbp - baseline_sbp
-  ) %>%
-  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+    heart_rate = baseline_hr - 25 * (1 - exp(-recovery_rate * hour)) + rnorm(n(), 0, 2)
+  )
 
-# Generate Plot
-ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
-  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
-  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
-  geom_hline(yintercept = 0, linetype = "dotted") +
+# Generate Plots
+ggplot(dat, aes(x = hour, y = heart_rate, group = patient_id, color = beta_blocker)) +
+  geom_line(aes(alpha = beta_blocker), linewidth = 1.1) +
+  # Define custom colors and alpha (opacity)
+  scale_color_manual(values = c("Yes" = "#007B7F", "No" = "#E87B6E")) +
+  scale_alpha_manual(values = c("Yes" = 0.9, "No" = 0.25), guide = "none") +  # faint coral, dark turquoise
   labs(
-    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
-    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
-    x = "Weeks Since Start",
-    y = "Δ SBP from Baseline (mmHg)",
-    color = "Treatment"
+    title = "Postoperative Heart Rate Recovery by Beta-Blocker Use",
+    subtitle = "Each line represents one patient; dark turquoise = on beta-blocker, faint coral = not on beta-blocker",
+    x = "Hours Since Surgery",
+    y = "Heart Rate (bpm)",
+    color = "Beta-Blocker"
   ) +
-  theme_minimal(base_size = 13)
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "top")
+
+
 
 
 
@@ -550,57 +526,50 @@ ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
 #| fig-height: 9
 
 # =========================================
-# Systolic Blood Pressure Change from Baseline
+# Heart Rate Recovery: Clarity Through Transparency
 # =========================================
 
-#load libraries and simulate data
+#Load libraries and simulate data
 library(tidyverse)
+set.seed(123)
 
-set.seed(42)
 
-n <- 120
+n_patients <- 10
+hours <- seq(0, 48, by = 2)
+
 patients <- tibble(
-  patient_id = paste0("P", seq_len(n)),
-  treatment  = sample(c("ACEi", "ARB"), n, replace = TRUE),
-  baseline_sbp = round(rnorm(n, mean = 158, sd = 14))
-) %>%
-  mutate(
-    baseline_stratum = cut(
-      baseline_sbp,
-      breaks = c(-Inf, 159, Inf),
-      labels = c("Stage 2 (140–159)", "Stage 3 (≥160)")
-    ),
-    drop_rate = if_else(treatment == "ACEi", 0.80, 0.65) +
-                if_else(baseline_sbp >= 160, 0.10, 0.00) +
-                rnorm(n(), 0, 0.05),
-    max_drop  = if_else(baseline_sbp >= 160, 24, 16) +
-                if_else(treatment == "ACEi", 4, 0) +
-                rnorm(n(), 0, 2)
-  )
+  patient_id   = paste0("P", seq_len(n_patients)),
+  beta_blocker = sample(c("Yes", "No"), n_patients, replace = TRUE),
+  baseline_hr  = rnorm(n_patients, 95, 8),
+  recovery_rate = if_else(beta_blocker == "Yes",
+                          rnorm(n_patients, 0.10, 0.03),
+                          rnorm(n_patients, 0.06, 0.02))
+)
 
-weeks <- 0:12
-
-dat <- expand_grid(patient_id = patients$patient_id, week = weeks) %>%
+dat <- expand_grid(patient_id = patients$patient_id, hour = hours) %>%
   left_join(patients, by = "patient_id") %>%
   mutate(
-    sbp = baseline_sbp - max_drop * (1 - exp(-drop_rate * week)) + rnorm(n(), 0, 2),
-    delta_sbp = sbp - baseline_sbp
-  ) %>%
-  filter(baseline_stratum == "Stage 3 (≥160)")  # <-- Stage 3 only
+    heart_rate = baseline_hr - 25 * (1 - exp(-recovery_rate * hour)) + rnorm(n(), 0, 2)
+  )
 
-# Generate Plot
-ggplot(dat, aes(x = week, y = delta_sbp, color = treatment)) +
-  geom_line(aes(group = patient_id), alpha = 0.15) +              # faint individual lines
-  stat_summary(fun = mean, geom = "line", linewidth = 1.6) +      # bold mean by treatment
-  geom_hline(yintercept = 0, linetype = "dotted") +
+# Generate Plots
+ggplot(dat, aes(x = hour, y = heart_rate, group = patient_id, color = beta_blocker)) +
+  geom_line(aes(alpha = beta_blocker), linewidth = 1.1) +
+  # Define custom colors and alpha (opacity)
+  scale_color_manual(values = c("Yes" = "#007B7F", "No" = "#E87B6E")) +
+  scale_alpha_manual(values = c("Yes" = 0.9, "No" = 0.25), guide = "none") +  # faint coral, dark turquoise
   labs(
-    title = "SBP Change from Baseline After Therapy — Stage 3 (≥160)",
-    subtitle = "Negative = improvement. Means by treatment; individual trajectories faint.",
-    x = "Weeks Since Start",
-    y = "Δ SBP from Baseline (mmHg)",
-    color = "Treatment"
+    title = "Postoperative Heart Rate Recovery by Beta-Blocker Use",
+    subtitle = "Each line represents one patient; dark turquoise = on beta-blocker, faint coral = not on beta-blocker",
+    x = "Hours Since Surgery",
+    y = "Heart Rate (bpm)",
+    color = "Beta-Blocker"
   ) +
-  theme_minimal(base_size = 13)
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "top")
+
+
+
 
 
 
