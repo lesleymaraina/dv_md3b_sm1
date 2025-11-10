@@ -573,6 +573,8 @@ ggplot(dat, aes(x = hour, y = heart_rate, group = patient_id, color = beta_block
 
 
 
+
+
 ```
 :::
 :::
