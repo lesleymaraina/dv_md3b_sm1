@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.33">
 
   <meta name="author" content=" Lesley Chapman Hannah, Ph.D., M.S. College of Graduate Studies Northeast Ohio Medical University">
-  <title>Encoding Numerical Data: Seeing Magnitude, Relationship, and Variability</title>
+  <title>Communicating Quantitative Insight: Context and Annotation</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -130,7 +130,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h2 style="color: #2A76DD;" class="title">Encoding Numerical Data: Seeing Magnitude, Relationship, and Variability</h2>
+  <h2 style="color: #2A76DD;" class="title">Communicating Quantitative Insight: Context and Annotation</h2>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -143,146 +143,64 @@
 </section>
 <section id="lecture-outline" class="slide level2">
 <h2>Lecture Outline</h2>
-<p>Encoding Numeric Data for Perception</p>
 <ul>
-<li>Define encoding as the translation from numeric value to visual property</li>
-</ul>
-<p>Accuracy of Visual Encodings</p>
+<li><p>Turning numbers into biological interpretation</p>
 <ul>
-<li>Emphasize why position and length are most precise encodings</li>
-</ul>
-<p>Comparing Magnitudes and Relationships</p>
+<li>Discuss how data visualization can change within context—baseline, exposure, and comparator</li>
+</ul></li>
+<li><p>Context as the Analytical Frame</p>
 <ul>
-<li>Plots to compare independent group means and reveal quantitative relationships</li>
-</ul>
-<p>Seeing Variation within Data</p>
+<li>Every plot requires reference points: what changed, relative to what, and over what domain (time, dose, or event)</li>
+</ul></li>
+<li><p>Clarity Through Structure</p>
 <ul>
-<li>Introduce distribution plots that capture variability</li>
-</ul>
-<div class="footer">
-
-</div>
-</section>
-<section id="overview" class="slide level2">
-<h2>Overview</h2>
-<ul>
-<li><p>Visualization is how numbers become perceivable evidence</p></li>
-<li><p>Numeric data - encoded visually in a way the human eye can read with accuracy</p></li>
-<li><p>Our task is to translate quantitative measures — like tumor volume, creatinine level, or hospital cost — into visual form that preserves clinical and biological meaning</p></li>
-</ul>
-<div class="footer">
-
-</div>
-</section>
-<section id="encoding-numeric-data-for-visualization" class="slide level2 smaller">
-<h2><span style="font-size:80%">Encoding Numeric Data for Visualization</span></h2>
-<ul>
-<li><p><strong>Encoding : the translation step between numbers and perception</strong></p></li>
-<li><p><strong>Encode numeric data</strong>: map quantitative values — measurements, rates, concentrations, durations — onto visual properties that the human eye can perceive and compare</p></li>
-<li><p>For example:</p>
-<ul>
-<li>Consider a bar chart of mean tumor volume or a scatterplot of gene expression versus dosage, the numbers themselves aren’t visible — what you see are encoded representations</li>
+<li>Grouping and organizing longitudinal numerical data <span class="math inline">\(\rightarrow\)</span> visual complexity becomes readable</li>
 </ul></li>
 </ul>
 <div class="footer">
 
 </div>
 </section>
-<section id="encoding-numeric-data-for-visualization-1" class="slide level2 smaller">
-<h2><span style="font-size:80%">Encoding Numeric Data for Visualization</span></h2>
-<p>Encoding properties within the context of plots:</p>
+<section id="recap-visualizing-change-in-data" class="slide level2 smaller">
+<h2><span style="font-size:80%">Recap: Visualizing Change in Data</span></h2>
+<p><strong>Key Concepts</strong></p>
 <ul>
-<li><p><strong>Position</strong> — where a point or line falls on an axis</p></li>
-<li><p><strong>Length</strong> — how tall or long a bar or segment is</p></li>
-<li><p><strong>Area</strong> — the size of a shape or bubble</p></li>
-<li><p><strong>Color</strong> — hue or intensity representing a scale of values</p></li>
-<li><p><strong>Angle or slope</strong> — degree of change or proportion</p></li>
+<li><p><strong>Biomedical data are dynamic</strong>: recovery, relapse, enzyme induction, and patient flow all unfold over time — reflective of processes not points</p></li>
+<li><p><strong>Temporal visualization reveals mechanism</strong>: by showing rate, direction, and timing, we see how biology responds, adapts, or deteriorates</p></li>
+<li><p><strong>Quantifying change links data to biology</strong>: slopes and trajectories translate raw measurements into physiological meaning — improvement, failure, or compensation</p></li>
+<li><p>Visualizing change builds intuition about how systems behave, not just averages</p></li>
 </ul>
-<p>Each of these properties is a channel through which a numerical difference becomes visually perceptible</p>
+<p><strong>Example</strong></p>
+<ul>
+<li><strong>Longitudinal eGFR visualization</strong> exposes gradual kidney decline months before thresholds in a static table would flag it — allowing earlier intervention</li>
+</ul>
 <div class="footer">
 
 </div>
 </section>
-<section id="encoding-transforms-abstract-quantities-into-spatial-evidence" class="slide level2 smaller">
-<h2><span style="font-size:80%">Encoding transforms abstract quantities into spatial evidence</span></h2>
-<div class="columns">
-<div class="column" style="width:0%;">
-
-</div><div class="column" style="width:100%;">
-<p>Encoding converts quantitative differences into visual differences that the viewer can process quickly and intuitively</p>
-<table class="caption-top">
-<colgroup>
-<col style="width: 23%">
-<col style="width: 52%">
-<col style="width: 23%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Numeric Concept</th>
-<th>Visual Encoding</th>
-<th>Perceptual Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Tumor volume (cm^3)</td>
-<td>Bar height</td>
-<td>More = larger volume</td>
-</tr>
-<tr class="even">
-<td>Time to progression (months)</td>
-<td>Point position on x-axis</td>
-<td>Farther right = longer survival</td>
-</tr>
-<tr class="odd">
-<td>Fold-change in expression</td>
-<td>Color intensity</td>
-<td>Darker = higher expression</td>
-</tr>
-<tr class="even">
-<td>Hospital cost</td>
-<td>Circle area</td>
-<td>Bigger = higher cost</td>
-</tr>
-</tbody>
-</table>
-</div></div>
+<section id="context-as-foundation" class="slide level2 smaller">
+<h2><span style="font-size:80%">Context as Foundation</span></h2>
+<p>Change is interpretable only within context: baseline, exposure, comparator</p>
+<p>Before plotting define:</p>
+<ul>
+<li><p>What changed? (variable)</p></li>
+<li><p>Relative to what? (baseline or reference)</p></li>
+<li><p>Over what domain? (time, dose, event count)</p></li>
+</ul>
+<p>Context transforms a plot from motion to meaning</p>
 <div class="footer">
 
 </div>
 </section>
-<section id="encoding-choices-determine-accuracy-and-interpretability" class="slide level2 smaller">
-<h2><span style="font-size:60%"> Encoding choices determine accuracy and interpretability</span></h2>
-<div class="columns">
-<div class="column" style="width:0%;">
-
-</div><div class="column" style="width:100%;">
-<p>Position and length - key for accurate visual encodings</p>
-<p>Area and color - possibly perceptually weak</p>
+<section id="context-as-foundation-1" class="slide level2 smaller">
+<h2><span style="font-size:80%">Context as Foundation</span></h2>
+<p><strong>Research question(s): </strong></p>
+<p>Understand impact on hypertension: Does systolic blood pressure (SBP) improve from baseline over 12 weeks after therapy initiation?</p>
+<p>Does the change differ between treatment groups (ACEi vs ARB)?</p>
 <ul>
-<li>Color intensity depends on context and contrast, not true magnitude</li>
+<li>ACEi – Angiotensin-Converting Enzyme Inhibitor</li>
+<li>ARB – Angiotensin II Receptor Blocker</li>
 </ul>
-</div></div>
-<div class="footer">
-
-</div>
-</section>
-<section id="encoding-choices-determine-accuracy-and-interpretability-1" class="slide level2 smaller">
-<h2><span style="font-size:60%"> Encoding choices determine accuracy and interpretability</span></h2>
-<div class="columns">
-<div class="column" style="width:0%;">
-
-</div><div class="column" style="width:100%;">
-<p>Encoding errors distort perception even when numbers are correct</p>
-<ul>
-<li><p>Truncated bars exaggerate small differences</p></li>
-<li><p>Bubble plots overstate change because area grows faster than value</p></li>
-</ul>
-<p>Encoding is a scientific decision</p>
-<ul>
-<li>The choice of visual form determines whether viewers perceive quantitative truth or visual illusion</li>
-</ul>
-</div></div>
 <div class="footer">
 
 </div>
@@ -291,18 +209,17 @@
 .tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
 </style>
 </section>
-<section id="bars-and-columns-encoding-magnitude-by-length" class="slide level2 smaller">
-<h2><span style="font-size:60%">Bars and Columns: Encoding Magnitude by Length</span></h2>
+<section id="context-as-foundation-2" class="slide level2 smaller">
+<h2><span style="font-size:60%">Context as Foundation</span></h2>
 <div class="columns">
 <div class="column small">
-<p><em>Task</em>: Compare blood glucose (mean HbA1c) reduction across diabetes therapies</p>
-<p><em>Plotting Concepts</em></p>
-<ul>
-<li>Plot to visualize mean HbA1c reduction across diabetes therapies</li>
-<li>Each bar represents a treatment arm in a clinical trial</li>
-<li>Bars encode quantitative values as length from a baseline — ideal for comparing independent groups</li>
-<li>Axes must start at zero and display negative values</li>
-</ul>
+<p><strong>Plot type</strong></p>
+<p>Change-from-baseline line plot over time, with group means by treatment</p>
+<p><strong>Rationale:</strong></p>
+<p><strong>What changed?</strong> Blood pressure change from baseline (negative = improvement)</p>
+<p><strong>Relative to what?</strong> Week-0 baseline per patient (context)</p>
+<p><strong>Over what domain?</strong> Time (weeks) since start</p>
+<p><strong>Comparator?</strong> Treatment arms (ACEi vs ARB) shown simultaneously</p>
 </div><div class="column">
 <div class="cell">
 <div class="cell-output-display">
@@ -318,41 +235,23 @@
 .tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
 .tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
 </style>
-</section>
-<section id="scatter-plots-showing-paired-or-temporal-magnitudes" class="slide level2 smaller">
-<h2><span style="font-size:60%">Scatter Plots: Showing Paired or Temporal Magnitudes</span></h2>
-<div class="columns">
-<div class="column" style="width:0%;">
-
-</div><div class="column" style="width:100%;">
-<p>Scatter plots are foundational for understanding relationships between two quantitative variables</p>
-<p>Each point represents one observation, positioned by its values on two continuous scales</p>
-<p>An independent (predictor) variable on the x-axis and a dependent (response) variable on the y-axis</p>
-<p>Common Uses in Biomedical Research</p>
-<ul>
-<li>Pharmacodynamics – Tumor volume vs.&nbsp;drug dosage</li>
-<li>Epidemiology – BMI vs.&nbsp;systolic blood pressure</li>
-<li>Genomics – Expression level vs.&nbsp;mutation load</li>
-</ul>
-</div></div>
-<div class="footer">
-
-</div>
 <style>
 .tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
 .tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
 </style>
 </section>
-<section id="scatter-plots-showing-paired-or-temporal-magnitudes-1" class="slide level2 smaller">
-<h2><span style="font-size:60%">Scatter Plots: Showing Paired or Temporal Magnitudes</span></h2>
+<section id="context-as-foundation-3" class="slide level2 smaller">
+<h2><span style="font-size:60%">Context as Foundation</span></h2>
 <div class="columns">
 <div class="column small">
-<p>Example:</p>
-<p>Dose-response relationship: Does increasing drug dose reduce tumor volume in treated subjects?</p>
+<p><strong>Plot Interpretation</strong></p>
+<p>Both therapies lower blood pressure over time</p>
 <ul>
-<li><p>plot shows each patient’s tumor volume (y-axis) against administered dose (x-axis)</p></li>
-<li><p>negative correlation between dose and tumor volume: as dose increases, average tumor volume decreases</p></li>
-<li><p>pattern supports a therapeutic effect of the drug within the tested range — higher doses appear to inhibit tumor growth</p></li>
+<li>both ACEi and ARB reduce SBP in Stage 3 hypertension</li>
+</ul>
+<p>ACE inhibitors produce a faster and slightly greater response</p>
+<ul>
+<li>ACEi mean line declines more steeply and reaches a lower plateau, indicating more rapid early improvement and a larger overall reduction in SBP compared with ARBs</li>
 </ul>
 </div><div class="column">
 <div class="cell">
@@ -370,38 +269,31 @@
 .tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
 </style>
 </section>
-<section id="distributions-visualization-variation-in-data" class="slide level2 smaller">
-<h2><span style="font-size:60%">Distributions: Visualization Variation in Data</span></h2>
-<div class="columns">
-<div class="column" style="width:0%;">
-
-</div><div class="column" style="width:100%;">
-<p>Plots showing distribution gives the reader information beyond a single summary numbers and represents a full range of observed values for a variable</p>
-<p>Distribution plots allow the reader to ask questions beyond: What is the average?</p>
-<p>Instead:</p>
+<section id="seeing-structure-in-many-trajectories" class="slide level2 smaller">
+<h2><span style="font-size:80%">Seeing structure in many trajectories</span></h2>
 <ul>
-<li>How are values spread out?</li>
-<li>Are they symmetric or skewed?</li>
-<li>Are there clusters, gaps, or outliers?</li>
+<li><p>Visualizing many longitudinal lines <span class="math inline">\(\rightarrow\)</span> plot can quickly become unreadable</p>
+<ul>
+<li>lines overlap, and individual trends disappear</li>
+</ul></li>
+<li><p>Color selection and/or transparency help recover structure: you can see patterns within each group while still appreciating overall behavior</p></li>
+<li><p>Grouping trajectories by treatment arm, genotype, or study site clarifies whether responses are consistent within groups and distinct between groups</p></li>
+<li><p>Clarity and structure emerge when complex temporal data are organized visually</p></li>
 </ul>
-</div></div>
 <div class="footer">
 
 </div>
 </section>
-<section id="distributions-visualization-variation-in-data-1" class="slide level2 smaller">
-<h2><span style="font-size:60%">Distributions: Visualization Variation in Data</span></h2>
-<div class="columns">
-<div class="column" style="width:0%;">
-
-</div><div class="column" style="width:100%;">
-<p>Plot choices for displaying distributions:</p>
+<section id="seeing-structure-in-many-trajectories-1" class="slide level2 smaller">
+<h2><span style="font-size:80%">Seeing structure in many trajectories</span></h2>
+<p><strong>Research Question</strong></p>
+<p>How do postoperative heart rate recovery patterns differ between patients who received beta-blockers vs.&nbsp;those who didn’t during cardiac surgery recovery?</p>
+<p><strong>Plot type</strong></p>
+<p>Longitudinal line plot showing heart rate (bpm) over time since surgery (hours)</p>
+<p><strong>Rationale</strong></p>
 <ul>
-<li><p>Boxplots summarize key percentiles — median, IQR, whiskers, and outliers — giving a compact view of variability</p></li>
-<li><p>Violin plots add the shape of the distribution, showing skewness and bimodality that boxplots alone can miss</p></li>
-<li><p>Ridgelines stack multiple distributions, allowing quick comparison of trends across treatments, timepoints, or biomarkers</p></li>
+<li>Postoperative recovery datasets contain many overlapping time-series per patient</li>
 </ul>
-</div></div>
 <div class="footer">
 
 </div>
@@ -410,17 +302,19 @@
 .tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
 </style>
 </section>
-<section id="distributions-visualization-variation-in-data-2" class="slide level2 smaller">
-<h2><span style="font-size:60%">Distributions: Visualization Variation in Data</span></h2>
+<section id="seeing-structure-in-many-trajectories-2" class="slide level2 smaller">
+<h2><span style="font-size:80%">Seeing structure in many trajectories</span></h2>
 <div class="columns">
 <div class="column small">
-<p><strong>Question</strong>:</p>
-<p>In patients with an inflammatory condition such as rheumatoid arthritis, does escalating therapy (Placebo <span class="math inline">\(\rightarrow\)</span> Combination) lead to lower and more consistent serum cytokine levels?</p>
-<p><strong>Dataset</strong>:</p>
-<p>Dataset (simulated) of cytokine concentrations measured across four treatment arms :</p>
+<p>** Overplotting hides the signal **</p>
 <ul>
-<li><p>Placebo, LowDose, HighDose, and Combination</p></li>
-<li><p>Each arm contains 150 observations</p></li>
+<li><p>Each black/grey line represents one patient’s heart rate recovery over time</p></li>
+<li><p>Lines are ungrouped <span class="math inline">\(\rightarrow\)</span> overlap and obscure individual patterns</p></li>
+<li><p>Downward trend can be viewed <span class="math inline">\(\rightarrow\)</span> difficult to interpret consistency or group differences</p></li>
+<li><p>Example of raw longitudinal data</p>
+<ul>
+<li>dense and cognitively heavy</li>
+</ul></li>
 </ul>
 </div><div class="column">
 <div class="cell">
@@ -442,18 +336,19 @@
 .tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
 </style>
 </section>
-<section id="distributions-visualization-variation-in-data-3" class="slide level2 smaller">
-<h2><span style="font-size:60%">Distributions: Visualization Variation in Data</span></h2>
+<section id="seeing-structure-in-many-trajectories-3" class="slide level2 smaller">
+<h2><span style="font-size:80%">Seeing structure in many trajectories</span></h2>
 <div class="columns">
 <div class="column small">
-<p><strong>Question</strong>:</p>
-<p><strong>Plot choice and interpretation</strong>:</p>
+<p><strong>Structure emerges when data are organized </strong></p>
 <ul>
-<li>Violin plot displays the full distribution of cytokine levels for each treatment arm</li>
-<li>Width of each violin: shows where values are most concentrated</li>
-<li>Box inside violin: shows the median and interquartile range (IQR)</li>
+<li><p>By adding grouping (e.g., by treatment or condition) and using transparency, individual variability remains visible while the overall structure becomes clear</p></li>
+<li><p>The plot now shows both:</p>
+<ul>
+<li><p>Within-group consistency (patients under the same condition show similar patterns)</p></li>
+<li><p>Between-group differences (different treatments recover at different rates)</p></li>
+</ul></li>
 </ul>
-<p><em>Overall Interpretation</em>: Evidence of potential therapeutic efficacy - as treatment intensity increases, the distribution shifts downward and narrows, indicating both lower median levels and less variability among patients</p>
 </div><div class="column">
 <div class="cell">
 <div class="cell-output-display">
@@ -469,32 +364,46 @@
 .tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
 .tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
 </style>
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
+</section>
+<section id="seeing-structure-in-many-trajectories-4" class="slide level2 smaller">
+<h2><span style="font-size:80%">Seeing structure in many trajectories</span></h2>
+<div class="columns">
+<div class="column small">
+<p><strong>Clarity through contrast</strong></p>
+<ul>
+<li><p>Plot displays same complexity, better structure</p></li>
+<li><p>Patients receiving beta-blockers (dark turquoise) stabilize slightly faster and reach lower heart rates</p></li>
+<li><p>Non-beta blocker recipients (faint coral) recover more slowly</p></li>
+<li><p>Transparency and color distinction allow structure to emerge without clutter — a visual argument for organized longitudinal plotting</p></li>
+</ul>
+</div><div class="column">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="test_2_082025_files/figure-revealjs/unnamed-chunk-5-1.png" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<style>
+.tiny-table table { font-size: 0.8em; }        /* adjust as needed (0.8–0.9em) */
+.tiny-table figcaption, .tiny-table .table-caption { font-size: 0.75em; }
+</style>
 </section>
 <section id="summary" class="slide level2 smaller">
-<h2><span style="font-size:60%">Summary</span></h2>
-<div class="columns">
-<div class="column" style="width:0%;">
-
-</div><div class="column" style="width:100%;">
+<h2><span style="font-size:80%">Summary</span></h2>
 <ul>
-<li><p>Turning numbers into perceptible scientific evidence:</p>
-<ul>
-<li>Encoding allows the reader to easily visualize magnitude, change, and relationship</li>
-</ul></li>
-<li><p>Bars and scatter plots reveal structure and association</p>
-<ul>
-<li>Plots that help clarify between-group differences and variable relationships</li>
-</ul></li>
-<li><p>Distributions expose the biology of variability</p>
-<ul>
-<li>Plots like violins and boxplots reveal skew, spread, and outliers</li>
-</ul></li>
-<li><p>Interpreting visualized data is scientific reasoning</p>
-<ul>
-<li>Visualizing magnitude, correlation, and spread enables inference about mechanisms and treatment effects</li>
-</ul></li>
+<li><p>Context defines interpretation : quantitative change has meaning only when tied to a baseline or comparator (ACEi vs ARB, pre- vs post-therapy)</p></li>
+<li><p>Organization creates insight : opacity and color grouping reveal structure hidden in overlapping lines</p></li>
+<li><p>Visual design is analytical : choices of encoding, grouping, and contrast directly influence the ability to detect biological patterns</p></li>
+<li><p>Effective visualization connects raw numbers to physiological response, making temporal data clinically interpretable</p></li>
 </ul>
-</div></div>
 <div class="footer">
 
 </div>
